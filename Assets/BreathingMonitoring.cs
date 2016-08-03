@@ -4,6 +4,9 @@ using UnityEngine.UI;
 
 public class BreathingMonitoring : MonoBehaviour {
 
+	[Range(0.0f, 3.0f)]
+	[SerializeField] private float MinimumAcceptableExhaleDuration;
+
 	[SerializeField] private string AverageTextPrefix;
 	[SerializeField] private string MaximumTextPrefix;
 
@@ -75,8 +78,10 @@ public class BreathingMonitoring : MonoBehaviour {
 				UpdateMaximumBreathDuration();
 		}
 
-		BreathDurationSum += exhaleTimer;
-		BreathCount++;
-		UpdateAverageBreathDuration ();
+		if (exhaleTimer > MinimumAcceptableExhaleDuration) {
+			BreathDurationSum += exhaleTimer;
+			BreathCount++;
+			UpdateAverageBreathDuration ();
+		}
 	}
 }
