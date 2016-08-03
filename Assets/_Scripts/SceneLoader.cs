@@ -15,4 +15,8 @@ public class SceneLoader : MonoBehaviour {
 	public void toGraphView(){
 		Application.LoadLevel (2);
 	}
+
+	public void loadSceneByNumber(int sceneNumber){
+		Application.LoadLevel (sceneNumber);
+	}
 }
