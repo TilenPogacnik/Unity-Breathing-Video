@@ -56,7 +56,6 @@
      <None Include="Assets\MPMP\Plugins\x86_64\lua\http\requests\vlm.xml" />
      <None Include="Assets\MPMP\Plugins\x86\lua\http\requests\browse.xml" />
      <None Include="Assets\MPMP\Plugins\x86\lua\http\requests\vlm.xml" />
-     <None Include="Assets\ReadMe.Demo.txt" />
      <None Include="Assets\EasyMovieTexture\Unlit_SphereInside.shader" />
      <None Include="Assets\MPMP\Plugins\x86_64\lua\http\requests\vlm_cmd.xml" />
      <None Include="Assets\MPMP\Plugins\x86_64\lua\http\requests\playlist_jstree.xml" />

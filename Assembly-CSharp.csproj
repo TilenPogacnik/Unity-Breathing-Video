@@ -51,7 +51,6 @@
      <Compile Include="Assets\BreathingDetection\_Scripts\Tools\FPSDisplay.cs" />
      <Compile Include="Assets\BreathingDetection\_Scripts\Tools\Graph\TestGraphMovement.cs" />
      <Compile Include="Assets\BreathingDetection\_Scripts\Tools\Graph\stateChangeIndicator.cs" />
-     <Compile Include="Assets\BreathingMonitoring.cs" />
      <Compile Include="Assets\EasyMovieTexture\FFmpeg.AutoGen\FFmpeg.avcodec.g.cs" />
      <Compile Include="Assets\EasyMovieTexture\FFmpeg.AutoGen\FFmpeg.avdevice.g.cs" />
      <Compile Include="Assets\EasyMovieTexture\FFmpeg.AutoGen\FFmpeg.avfilter.g.cs" />
@@ -83,15 +82,17 @@
      <Compile Include="Assets\MPMP\Scripts\MPMP_Utils.cs" />
      <Compile Include="Assets\MPMP\Scripts\MPMP_VR_Setup.cs" />
      <Compile Include="Assets\MPMP\Scripts\MPMP_VideoSynchronizer.cs" />
-     <Compile Include="Assets\VideoEMT.cs" />
+     <Compile Include="Assets\PanelClosing.cs" />
+     <Compile Include="Assets\_Scripts\BreathingMonitoring.cs" />
+     <Compile Include="Assets\_Scripts\LoadingVideoSceneManager.cs" />
      <Compile Include="Assets\_Scripts\SceneLoader.cs" />
      <Compile Include="Assets\_Scripts\Utility\DragPanel.cs" />
      <Compile Include="Assets\_Scripts\Video.cs" />
      <Compile Include="Assets\_Scripts\VideoController.cs" />
+     <Compile Include="Assets\_Scripts\VideoEMT.cs" />
      <None Include="Assets\MPMP\Plugins\x86_64\lua\http\requests\vlm.xml" />
      <None Include="Assets\MPMP\Plugins\x86\lua\http\requests\browse.xml" />
      <None Include="Assets\MPMP\Plugins\x86\lua\http\requests\vlm.xml" />
-     <None Include="Assets\ReadMe.Demo.txt" />
      <None Include="Assets\EasyMovieTexture\Unlit_SphereInside.shader" />
      <None Include="Assets\MPMP\Plugins\x86_64\lua\http\requests\vlm_cmd.xml" />
      <None Include="Assets\MPMP\Plugins\x86_64\lua\http\requests\playlist_jstree.xml" />

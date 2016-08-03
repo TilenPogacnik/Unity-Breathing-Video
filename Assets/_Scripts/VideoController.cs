@@ -4,12 +4,15 @@ using UnityEngine.UI;
 
 	public class VideoController : MonoBehaviour {
 
-		public GameObject[] videos;
+		public static VideoController instance;
+		[SerializeField] private GameObject[] videos;
 
-		private float pausedVideoZ = 10;
-		private float playingVideoZ = 0;
+		[SerializeField] private float pausedVideoZ = 10;
+		[SerializeField] private float playingVideoZ = 0;
 
-		public bool seekToStart = true;
+		[SerializeField] private bool seekToStart = true;
+
+		private int loadedVideoCount = 0;
 
 		private bool firstVideo = true;
 		private int currentVideo = -1;
@@ -34,21 +37,14 @@ using UnityEngine.UI;
 			setCurrentVideo (1);
 		}
 
+	void Awake(){
+		instance = this;
+	}
+
 	void Start(){
-		setCurrentVideo (0);
 	}
 		
 		void Update () {
-			/*if (firstVideo) {
-				setCurrentVideo(0);
-			}
-			if (isExhaling()) {
-				setCurrentVideo (1);
-				firstVideo = false;
-
-			} else if (!firstVideo){
-				setCurrentVideo (2);
-			}*/
 
 			if (Input.GetKeyDown (KeyCode.Alpha1)) {
 				setCurrentVideo(0);
@@ -100,5 +96,17 @@ using UnityEngine.UI;
 			setCurrentVideo (0);
 			firstVideo = true;
 			currentVideo = 0;
+		}
+
+		void startPlayingVideos(){
+			setCurrentVideo (0);
+		}
+
+		public void OnVideoLoaded(){
+			loadedVideoCount ++;
+			if (loadedVideoCount >= videos.Length) {
+				Debug.Log ("All videos loaded. We can start playing videos now.");
+				startPlayingVideos();
+			}
 		}
 }

@@ -747,7 +747,7 @@ public class MediaPlayerCtrl : MonoBehaviour
 
     void OnApplicationPause(bool bPause)
     {
-        Debug.Log("ApplicationPause : " + bPause);
+        //Debug.Log("ApplicationPause : " + bPause);
         if (bPause == true)
         {
             if (m_CurrentState == MEDIAPLAYER_STATE.PAUSED)
@@ -1922,7 +1922,7 @@ public class MediaPlayerCtrl : MonoBehaviour
 		if( strFileName.Contains("://") == false)
 		{
 			strFileName = Application.streamingAssetsPath + "/" + strFileName;
-			Debug.Log(strFileName);
+			//Debug.Log(strFileName);
 		}
 		else if( strFileName.Contains("file://") == true)
 		{
@@ -1983,7 +1983,7 @@ void LoadVideoPart2 ()
 					pStream = (pFormatContext)->streams[i];
 					iStreamIndex = i;
 
-					Debug.Log("Video" +  iStreamIndex);
+					//Debug.Log("Video" +  iStreamIndex);
 				}
 
 			}
@@ -3063,7 +3063,7 @@ void LoadVideoPart2 ()
 
 
 
-		Debug.Log (seek_target);
+		//Debug.Log (seek_target);
 		seek_target= ffmpeg.av_rescale_q(seek_target, ffmpeg.av_get_time_base_q() ,
 		                                 pStream->time_base);
 
