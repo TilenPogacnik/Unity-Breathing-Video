@@ -23,6 +23,7 @@ public class NewVideoController : MonoBehaviour {
 		public void Play(){
 			if (isLoaded) {
 				mediaPlayerControl.Play ();
+				UpdateVideoZPosition (true);
 				pendingPlay = false;
 			} else {
 				pendingPlay = true;
@@ -31,10 +32,12 @@ public class NewVideoController : MonoBehaviour {
 
 		public void Pause (){
 			mediaPlayerControl.Pause ();
+			//UpdateVideoZPosition (false);
 		}
 
 		public void Stop(){
 			mediaPlayerControl.Stop ();
+			UpdateVideoZPosition (false);
 		}
 
 		public void SeekToStart (){
@@ -48,12 +51,14 @@ public class NewVideoController : MonoBehaviour {
 		}
 
 		public void OnVideoLoaded(){
-			mediaPlayerControl.Stop (); //We don't want the video to start playing as soon as it loads
-
 			ResizeVideoFullscreen ();
 
+			mediaPlayerControl.Stop (); //We don't want the video to start playing as soon as it loads
+			UpdateVideoZPosition (false);
 			isLoaded = true;
-			Debug.Log ("VIDEO LOADED: " + gameObject.name);
+
+			//Debug.Log ("VIDEO LOADED: " + gameObject.name);
+
 			NewVideoController.instance.CheckIfAllVideosAreLoaded ();
 
 			if (pendingPlay) {
@@ -86,17 +91,36 @@ public class NewVideoController : MonoBehaviour {
 		float GetVideoAspectRatio(){
 			return (float) mediaPlayerControl.GetVideoWidth() / (float) mediaPlayerControl.GetVideoHeight ();
 		}
+
+		void UpdateVideoZPosition (bool isPlaying){
+			float newZPosition = 0.0f;
+
+			if (isPlaying) {
+				newZPosition = NewVideoController.instance.playingVideoZ;
+			} else {
+				newZPosition = NewVideoController.instance.pausedVideoZ;
+			}
+
+			gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, newZPosition);
+		}
 	}
 
 	[SerializeField] private string[] videoNames;
 	[SerializeField] private GameObject VideoPrefab;
 	[SerializeField] private List<Video> Videos;
 
+	[SerializeField] private float pausedVideoZ = 10;
+	[SerializeField] private float playingVideoZ = 0;
+
 	public static NewVideoController instance;
 
-	private bool allVideosLoaded = false;
+	private Video currentPlayingVideo;
+
+	public bool allVideosLoaded { get; private set; }
 
 	void Awake(){
+		allVideosLoaded = false;
+		currentPlayingVideo = null;
 		instance = this;
 	}
 
@@ -152,17 +176,49 @@ public class NewVideoController : MonoBehaviour {
 				return false;
 			}
 		}
-
+		
 		allVideosLoaded = true;
+
 		return true;
 	}
 
-	public void PlayVideo(string name, bool seekToStart){
+	public bool PlayVideo(string name, bool seekToStart){
 		Video video = Videos.First (v => v.videoName == name);
 		if (video == null) {
 			Debug.LogError ("You are trying to play video " + name + "which cannot be found.");
-			return;
+			return false;
 		}
+		if (!video.isLoaded) {
+			Debug.LogError ("Video " + video.videoName + " can not be played before it is loaded."); 
+			return false;
+		}
+
+		//Stop the video that is currently playing
+		if (currentPlayingVideo != null) {
+			currentPlayingVideo.Stop();
+		}
+		currentPlayingVideo = video;
+
 		video.Play ();
+		return true;
+	}
+
+	public bool PauseCurrentVideo(){
+		if (currentPlayingVideo == null) {
+			Debug.LogError ("Can not pause video - there is no video that is currently playing.");
+			return false;
+		}
+
+		currentPlayingVideo.Pause ();
+		return true;
+	}
+
+	public bool StopCurrentVideo(){
+		if (currentPlayingVideo == null) {
+			Debug.LogError ("Can not stop video - there is no video that is currently playing.");
+			return false;
+		}
+		currentPlayingVideo.Stop ();
+		return true;
 	}
 }
