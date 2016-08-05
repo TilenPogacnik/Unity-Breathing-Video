@@ -13,7 +13,7 @@ public class VideoEMT : MonoBehaviour {
 	void Awake () {
 		videoPlayer = this.GetComponent<MediaPlayerCtrl> ();
 		if (videoPlayer == null) {
-			Debug.LogError("Could not find MPMP VideoPlayer attached to this GameObject");
+			Debug.LogError("Could not find MediaPlayerCtrl attached to this GameObject (" + this.gameObject.name + ").");
 		}
 	}
 	void Start(){

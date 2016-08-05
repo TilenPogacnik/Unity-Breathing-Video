@@ -75,7 +75,8 @@ public class MicrophoneController : MonoBehaviour {
 			if (maxFrequency == 0){//These 2 lines of code are mainly for windows computers
 				maxFrequency = 44100;
 			}
-			aSource.clip = Microphone.Start(Microphone.devices[0], true, 1, AudioSettings.outputSampleRate);
+
+			aSource.clip = Microphone.Start(Microphone.devices[0], true, 1, maxFrequency);//AudioSettings.outputSampleRate);
 			aSource.loop = true;
 
 			//Wait until microphone starts

@@ -1,13 +1,11 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\_Scripts\SceneLoader.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\NewVideoController.cs">
     <Files>
-      <File FileName="Assets\EasyMovieTexture\Scripts\MediaPlayerFullScreenCtrl.cs" Line="1" Column="1" />
-      <File FileName="Assets\EasyMovieTexture\Scripts\MedaiPlayerSampleGUI.cs" Line="1" Column="1" />
+      <File FileName="Assets\BreathingDetection\_Scripts\MicrophoneController.cs" Line="59" Column="36" />
       <File FileName="Assets\_Scripts\VideoController.cs" Line="1" Column="1" />
-      <File FileName="Assets\VideoEMT.cs" Line="49" Column="25" />
-      <File FileName="Assets\_Scripts\Video.cs" Line="1" Column="1" />
-      <File FileName="Assets\_Scripts\SceneLoader.cs" Line="20" Column="39" />
+      <File FileName="Assets\NewVideoController.cs" Line="16" Column="50" />
+      <File FileName="Assets\_Scripts\VideoEMT.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
