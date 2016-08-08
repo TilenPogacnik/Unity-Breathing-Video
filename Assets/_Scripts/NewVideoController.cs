@@ -7,6 +7,7 @@ using System.Linq;
 public class NewVideoController : MonoBehaviour {
 
 	public class Video{
+
 		public string videoName;
 		public GameObject gameObject;
 		public MediaPlayerCtrl mediaPlayerControl;
@@ -32,19 +33,29 @@ public class NewVideoController : MonoBehaviour {
 
 		public void Pause (){
 			mediaPlayerControl.Pause ();
-			//UpdateVideoZPosition (false);
 		}
 
 		public void Stop(){
 			mediaPlayerControl.Stop ();
-			UpdateVideoZPosition (false);
+		}
+			
+		public void Seek(int milliseconds){
+			int videoLength = mediaPlayerControl.GetDuration ();
+			if (0 <= milliseconds && milliseconds <= videoLength) {
+				mediaPlayerControl.SeekTo (milliseconds);
+			} else {
+				if (milliseconds < 0){
+					Debug.LogError (videoName + ": Can not seek to a negative time.");
+				} else if (milliseconds > videoLength){
+					Debug.LogError (videoName + ": The requested seek time is larger than the video length.");
+				}
+			}
 		}
 
 		public void SeekToStart (){
 			if (isLoaded) {
 				mediaPlayerControl.SeekTo(0);
-				//mediaPlayerControl.Stop ();
-				//mediaPlayerControl.Play ();
+		
 			} else {
 				Debug.LogError("Can't seek to start if video is not loaded. Offending video: " + videoName);
 			} 
@@ -92,7 +103,7 @@ public class NewVideoController : MonoBehaviour {
 			return (float) mediaPlayerControl.GetVideoWidth() / (float) mediaPlayerControl.GetVideoHeight ();
 		}
 
-		void UpdateVideoZPosition (bool isPlaying){
+		public void UpdateVideoZPosition (bool isPlaying){
 			float newZPosition = 0.0f;
 
 			if (isPlaying) {
@@ -114,8 +125,7 @@ public class NewVideoController : MonoBehaviour {
 
 	public static NewVideoController instance;
 
-	private Video currentPlayingVideo;
-
+	public Video currentPlayingVideo;
 	public bool allVideosLoaded { get; private set; }
 
 	void Awake(){
@@ -133,10 +143,13 @@ public class NewVideoController : MonoBehaviour {
 		List<Video> VideoList = new List<Video> ();
 		foreach (string videoName in videoNames) {
 
-			if (!File.Exists(Application.streamingAssetsPath + "/" + videoName)){
-				Debug.LogError ("You are trying to load video " + videoName + " which does not exist.");
-				return null;
-			}
+			#if UNITY_EDITOR 
+				//This part of code only runs in Unity Editor and not in the final build
+				if (!File.Exists(Application.streamingAssetsPath + "/" + videoName)){
+					Debug.LogError ("You are trying to load video " + videoName + " which does not exist.");
+					return null;
+				}
+			#endif
 
 			GameObject videoObject = Instantiate(VideoPrefab, Vector3.zero, Quaternion.identity) as GameObject;
 			if (videoObject == null){
@@ -182,7 +195,7 @@ public class NewVideoController : MonoBehaviour {
 		return true;
 	}
 
-	public bool PlayVideo(string name, bool seekToStart){
+	public bool PlayVideo(string name, bool seekToStart, bool loop = false, bool hidePreviousVideo = true){
 		Video video = Videos.First (v => v.videoName == name);
 		if (video == null) {
 			Debug.LogError ("You are trying to play video " + name + "which cannot be found.");
@@ -192,33 +205,109 @@ public class NewVideoController : MonoBehaviour {
 			Debug.LogError ("Video " + video.videoName + " can not be played before it is loaded."); 
 			return false;
 		}
+		
 
 		//Stop the video that is currently playing
 		if (currentPlayingVideo != null) {
-			currentPlayingVideo.Stop();
+			currentPlayingVideo.Pause();
+
+			if (hidePreviousVideo){
+				currentPlayingVideo.UpdateVideoZPosition(false);
+			}
 		}
 		currentPlayingVideo = video;
 
+		if (seekToStart) {
+			video.SeekToStart();
+		}
+
+		video.mediaPlayerControl.m_bLoop = loop;
 		video.Play ();
 		return true;
 	}
 
-	public bool PauseCurrentVideo(){
+	public bool PlayCurrentVideo(){
+		if (currentPlayingVideo == null) {
+			Debug.LogError("There is no current video that can be played.");
+			return false;
+		}
+		currentPlayingVideo.UpdateVideoZPosition (true);
+		currentPlayingVideo.Play ();
+		return true;
+	}
+
+	public bool PauseCurrentVideo(bool hideVideoCanvas = true){
 		if (currentPlayingVideo == null) {
 			Debug.LogError ("Can not pause video - there is no video that is currently playing.");
 			return false;
+		}
+
+		if (hideVideoCanvas) {
+			currentPlayingVideo.UpdateVideoZPosition(false);
 		}
 
 		currentPlayingVideo.Pause ();
 		return true;
 	}
 
-	public bool StopCurrentVideo(){
+	public bool StopCurrentVideo(bool hideVideoCanvas = true){
 		if (currentPlayingVideo == null) {
 			Debug.LogError ("Can not stop video - there is no video that is currently playing.");
 			return false;
 		}
+
+		if (hideVideoCanvas) {
+			currentPlayingVideo.UpdateVideoZPosition(false);
+		}
+
 		currentPlayingVideo.Stop ();
 		return true;
+	}
+
+	public bool SeekCurrentVideo(float seconds){
+		if (currentPlayingVideo == null) {
+			Debug.LogError ("Can not stop video - there is no video that is currently playing.");
+			return false;
+		}
+		int milliseconds = Mathf.FloorToInt (seconds * 1000);
+		currentPlayingVideo.Seek (milliseconds);
+		return true;
+	}
+
+	public bool SetVideoOnEnd(string name, MediaPlayerCtrl.VideoEnd function){
+		Video video = Videos.First (v => v.videoName == name);
+		if (video == null) {
+			Debug.LogError ("You are trying to set an OnEnd function for video " + name + "which cannot be found.");
+			return false;
+		}
+		if (!video.isLoaded) {
+			Debug.LogError ("You can't add OnEnd delegates to video " + video.videoName + " before it is loaded."); 
+			return false;
+		}
+		
+		video.mediaPlayerControl.OnEnd += function;
+		return true;
+	}
+
+	public bool RemoveVideoOnEnd(string name, MediaPlayerCtrl.VideoEnd function){
+		Video video = Videos.First (v => v.videoName == name);
+		if (video == null) {
+			Debug.LogError ("You are trying to remove an OnEnd function for video " + name + "which cannot be found.");
+			return false;
+		}
+		if (!video.isLoaded) {
+			Debug.LogError ("You can't add OnEnd delegates to video " + video.videoName + " before it is loaded."); 
+			return false;
+		}
+
+		foreach (System.Delegate d in video.mediaPlayerControl.OnEnd.GetInvocationList ()) {
+			if (d.Method == function.Method){
+				video.mediaPlayerControl.OnEnd += function;
+				return true;
+			}
+		}
+
+		Debug.LogError ("Cannot remove a delegate that doesn't exist.");
+		return false;
 	}
 }
