@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿	using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 
@@ -15,7 +15,7 @@ public class BreathingMonitoring : MonoBehaviour {
 	[SerializeField] private Text MaximumText;
 	[SerializeField] private Text CurrentExhaleText;
 
-	private float exhaleTimer = 0.0f;
+	public float exhaleTimer { get; private set;}
 	private bool isPlayerExhaling = false;
 
 	private float BreathDurationSum = 0.0f;
@@ -34,6 +34,7 @@ public class BreathingMonitoring : MonoBehaviour {
 	}
 
 	void Start(){
+		exhaleTimer = 0.0f;
 		UpdateCurrentExhaleText ();
 		UpdateMaximumBreathDuration ();
 		UpdateAverageBreathDuration ();

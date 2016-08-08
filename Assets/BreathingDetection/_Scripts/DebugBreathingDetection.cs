@@ -3,12 +3,7 @@ using System.Collections;
 
 public class DebugBreathingDetection : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
+#if UNITY_EDITOR
 	void Update () {
 		if (Input.GetKeyDown (KeyCode.B)) {
 			BreathingEvents.TriggerOnExhale ();
@@ -17,4 +12,5 @@ public class DebugBreathingDetection : MonoBehaviour {
 			BreathingEvents.TriggerOnInhale ();
 		}
 	}
+#endif
 }

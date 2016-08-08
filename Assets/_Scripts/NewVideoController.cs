@@ -151,7 +151,7 @@ public class NewVideoController : MonoBehaviour {
 				}
 			#endif
 
-			GameObject videoObject = Instantiate(VideoPrefab, Vector3.zero, Quaternion.identity) as GameObject;
+			GameObject videoObject = Instantiate(VideoPrefab, new Vector3(0.0f, 0.0f, pausedVideoZ), Quaternion.identity) as GameObject;
 			if (videoObject == null){
 				Debug.LogError ("Failed to instantiate videoObject.");
 				return null;
@@ -310,4 +310,5 @@ public class NewVideoController : MonoBehaviour {
 		Debug.LogError ("Cannot remove a delegate that doesn't exist.");
 		return false;
 	}
+
 }

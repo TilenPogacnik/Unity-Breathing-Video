@@ -4,7 +4,7 @@ using System.Collections;
 public class LoadingVideoSceneManager : MonoBehaviour {
 	private AsyncOperation async;
 
-	IEnumerator Start(){
+	IEnumerator  Start(){
 		//Wait until all videos are loaded
 		while (!NewVideoController.instance.allVideosLoaded) {
 			yield return new WaitForEndOfFrame();

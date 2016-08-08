@@ -133,17 +133,25 @@ namespace BreathingLabs.BreathingVideo //TODO: change namespace?
 	}
 
 	[ActionCategory("_Video")]
-	public class ShowImage : FsmStateAction
+	public class SetStatsScreenVisible : FsmStateAction
 	{
-		
+		[Tooltip("If not checked the stats screen will be hidden. If checked the stats screen will be visible.")]
+		public FsmBool Visible;
+	
 		public override void Reset()
 		{
-
+			Visible = true;
 		}
 		
 		public override void OnEnter()
 		{
-			
+			if (StatsScreenController.instance == null) {
+				Debug.LogError("StatsScreenController is not present in the scene.");
+				Finish ();
+			}
+
+			StatsScreenController.instance.SetStatsScreenVisible (Visible.Value);
 		}	
+
 	}
 }
