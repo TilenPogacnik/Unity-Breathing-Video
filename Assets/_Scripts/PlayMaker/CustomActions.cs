@@ -133,8 +133,10 @@ namespace BreathingLabs.BreathingVideo //TODO: change namespace?
 	}
 
 	[ActionCategory("_Video")]
-	public class SetStatsScreenVisible : FsmStateAction
+	public class SetScreenVisible : FsmStateAction
 	{
+
+		public ScreenController ScreenController;
 		[Tooltip("If not checked the stats screen will be hidden. If checked the stats screen will be visible.")]
 		public FsmBool Visible;
 	
@@ -145,13 +147,119 @@ namespace BreathingLabs.BreathingVideo //TODO: change namespace?
 		
 		public override void OnEnter()
 		{
-			if (StatsScreenController.instance == null) {
-				Debug.LogError("StatsScreenController is not present in the scene.");
+			if (ScreenController == null) {
+				Debug.LogError("ScreenController is not defined.");
 				Finish ();
 			}
 
-			StatsScreenController.instance.SetStatsScreenVisible (Visible.Value);
+			ScreenController.SetScreenVisible (Visible.Value);
 		}	
 
+	}
+
+	[ActionCategory("_Video")]
+	public class PlayAudioClipOneShot : FsmStateAction
+	{
+		[Title("Audio Clip")]
+		[ObjectType(typeof(AudioClip))]
+		public FsmObject Clip;
+
+		[HasFloatSlider(0, 1)]
+		public FsmFloat Volume;
+		
+		public override void Reset()
+		{
+			Clip = null;
+			Volume = 1.0f;
+		}
+		
+		public override void OnEnter()
+		{
+			PlaySound ();
+			Finish ();
+		}	
+
+		void PlaySound()
+		{
+			AudioClip audioClip = Clip.Value as AudioClip;
+			
+			if (audioClip == null)
+			{
+				Debug.LogError("Audio Clip is missing.");
+				return;
+			}
+
+			AudioSource.PlayClipAtPoint(audioClip, Camera.main.transform.position, Volume.Value);
+		}
+		
+	}
+
+	[ActionCategory("_Video")]
+	public class PlayBackgroundAudio : FsmStateAction
+	{
+		[Title("Audio Clip")]
+		[ObjectType(typeof(AudioClip))]
+		public FsmObject Clip;
+
+		public AudioSource audioSource;
+		public FsmBool Loop;
+		public FsmBool PlayOneShot;
+		public FsmBool Interrupt;
+
+		[HasFloatSlider(0, 1)]
+		public FsmFloat Volume;
+		
+		public override void Reset()
+		{
+			Clip = null;
+			Loop.Value = false;
+			PlayOneShot.Value = true;
+			Volume.Value = 1.0f;
+		}
+		
+		public override void OnEnter()
+		{
+			PlaySound ();
+			Finish ();
+		}	
+		
+		void PlaySound()
+		{
+			AudioClip audioClip = Clip.Value as AudioClip;
+			
+			if (audioClip == null) {
+				Debug.LogError("Audio Clip is missing.");
+				return;
+			}
+
+			if (audioSource == null) {
+				Debug.LogError("Audio Source is missing.");
+			}
+
+			if (Interrupt.Value) {
+				ChangeClipAndPlay(audioClip);
+			} else {
+				if (audioSource.isPlaying){
+					return;
+				} else {
+					ChangeClipAndPlay(audioClip);
+				}
+			}
+
+
+		}
+
+		void ChangeClipAndPlay(AudioClip audioClip){
+			if (audioSource.isPlaying) {
+				audioSource.Stop ();
+			}
+			audioSource.clip = audioClip;
+			audioSource.volume = Volume.Value;
+			audioSource.loop = Loop.Value;
+			audioSource.time = 0;
+			
+			audioSource.Play();
+		}
+		
 	}
 }
