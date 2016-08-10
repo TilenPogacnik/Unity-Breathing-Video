@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.Audio;
 using System.Collections.Generic;
+using UnityEditor;
 
 
 
@@ -27,6 +28,12 @@ public class MicrophoneController : MonoBehaviour {
 	private List<float> pastPitches;
 	public int pitchRecordTime = 5;
 	private float averagePitch;
+
+	[SerializeField] private bool UseFFTCentroid;
+	private float centroidValue;
+
+	[SerializeField] private bool EnableSavingOfRecordedAudio;
+
 
 	IEnumerator Start () {
 		aSource = this.GetComponent<AudioSource> ();
@@ -64,7 +71,21 @@ public class MicrophoneController : MonoBehaviour {
 	void Update () {
 		if (isMicrophoneReady) {
 			loudness = calculateLoudness();
-			calculatePitch();
+
+			if (UseFFTCentroid) {
+				calculateFFTCentroid();
+
+			} else {
+				calculatePitch();
+			}
+		}
+	}
+
+	void OnGUI(){
+		if (EnableSavingOfRecordedAudio) {
+			if (GUI.Button (new Rect (10, 10, 50, 50), "Save")) {
+				SaveRecordedAudio ();
+			}
 		}
 	}
 
@@ -117,6 +138,24 @@ public class MicrophoneController : MonoBehaviour {
 		//if (pitchValue > 100)	Debug.Log (pitchValue);
 	}
 
+	void calculateFFTCentroid(){
+		aSource.GetSpectrumData (fftSpectrum, 0, FFTWindow.BlackmanHarris);
+
+		float centroid = 0.0f;
+		float fftSum = 0.0f;
+		float weightedSum = 0.0f;
+
+		for (int i = 0; i < fftSpectrum.Length; i++) {
+			fftSum += fftSpectrum [i];
+			weightedSum += fftSpectrum [i] * maxFrequency / fftSpectrum.Length;
+		}
+
+		pitchValue = weightedSum / fftSum;
+		//Debug.Log ("Centroid: " + pitchValue);
+	}
+
+
+
 	float HighPassFilter(float pitch, float cutOff){
 		if (pitch > cutOff) {
 			return 0;
@@ -148,6 +187,10 @@ public class MicrophoneController : MonoBehaviour {
 		return averagePitch;
 	}
 
+	public float getCentroid(){
+		return centroidValue;
+	}
+
 	float calculateLoudness(){
 		float[] microphoneData = new float[samples];
 		float sum = 0;
@@ -158,5 +201,9 @@ public class MicrophoneController : MonoBehaviour {
 		}
 
 		return Mathf.Sqrt(sum/samples)*loudnessMultiplier;
+	}
+
+	void SaveRecordedAudio(){
+		EditorUtility.ExtractOggFile (GameObject.Find("TestAudioSource").GetComponent<AudioSource>().clip, Application.streamingAssetsPath);
 	}
 }
