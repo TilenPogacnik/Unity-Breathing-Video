@@ -153,6 +153,7 @@ namespace BreathingLabs.BreathingVideo //TODO: change namespace?
 			}
 
 			ScreenController.SetScreenVisible (Visible.Value);
+			Finish ();
 		}	
 
 	}

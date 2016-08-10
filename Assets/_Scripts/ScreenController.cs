@@ -1,27 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class ScreenController : MonoBehaviour {
 	[SerializeField] private bool UseScoreText;
-	[SerializeField] private TextMesh ScoreText;
+	[SerializeField] private Text ScoreText;
 	[SerializeField] private string ScoreTextPrefix;
 	[SerializeField] private string ScoreTextSuffix;
-	[SerializeField] private float HiddenZPosition; 
-	[SerializeField] private float VisibleZPosition;
 	[SerializeField] private bool VisibleOnStart;
 
 	private BreathingMonitoring breathingMonitoring;
 
-	void OnEnable(){
-		BreathingEvents.onInhale += UpdateText;
-	}
-
-	void OnDisable(){
-		BreathingEvents.onInhale -= UpdateText;
-
-	}
-
 	void Start () {
+		BreathingEvents.onInhale += UpdateText;
+
+
 		SetScreenVisible(VisibleOnStart);
 
 		//If BreathingMonitoring is not defined try to find it in scene
@@ -37,13 +30,7 @@ public class ScreenController : MonoBehaviour {
 	}
 	
 	public void SetScreenVisible(bool visible){
-		float newZPosition = 0.0f;
-		if (visible) {
-			newZPosition = VisibleZPosition;
-		} else {
-			newZPosition = HiddenZPosition;
-		}
-		this.gameObject.transform.position = new Vector3 (this.gameObject.transform.position.x, this.gameObject.transform.position.y, newZPosition); 
+		this.gameObject.SetActive (visible);
 	}
 
 	public void UpdateText (){

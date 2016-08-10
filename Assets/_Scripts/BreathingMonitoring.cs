@@ -49,21 +49,23 @@ public class BreathingMonitoring : MonoBehaviour {
 
 	void UpdateCurrentExhaleText (){
 			exhaleTimer += Time.deltaTime;
-			CurrentExhaleText.text = exhaleTimer.ToString ("f1") + CurrentExhaleSuffix;
+			CurrentExhaleText.text = exhaleTimer.ToString ("00.00").Replace (".", ":") + CurrentExhaleSuffix;
 	}
 
 	void UpdateMaximumBreathDuration(){
-		MaximumText.text = MaximumTextPrefix + MaximumBreathDuration.ToString ("f1");
+		MaximumText.text = MaximumTextPrefix + MaximumBreathDuration.ToString ("00.00").Replace (".", ":");
 	}
 
 	void UpdateAverageBreathDuration(){
-		float averageBreathDuration = 0.0f;
-		if (BreathCount > 0) {
-			averageBreathDuration = BreathDurationSum / BreathCount;
-		} else {
-			averageBreathDuration = 0.0f;
+		if (AverageText != null) {
+			float averageBreathDuration = 0.0f;
+			if (BreathCount > 0) {
+				averageBreathDuration = BreathDurationSum / BreathCount;
+			} else {
+				averageBreathDuration = 0.0f;
+			}
+			AverageText.text = AverageTextPrefix + averageBreathDuration.ToString ("f1");
 		}
-		AverageText.text = AverageTextPrefix + averageBreathDuration.ToString ("f1");
 	}
 
 	void OnExhaleStarted(){
