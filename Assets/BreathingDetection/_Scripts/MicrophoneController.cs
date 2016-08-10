@@ -2,7 +2,6 @@
 using System.Collections;
 using UnityEngine.Audio;
 using System.Collections.Generic;
-using UnityEditor;
 
 
 
@@ -91,20 +90,22 @@ public class MicrophoneController : MonoBehaviour {
 
 	void prepareMicrophone(){
 		//Debug.Log ("Output sample rate: " + AudioSettings.outputSampleRate);
-		if (Microphone.devices.Length > 0){
-			Microphone.GetDeviceCaps(Microphone.devices[0], out minFrequency, out maxFrequency);//Gets the maxFrequency and minFrequency of the device
-			if (maxFrequency == 0){//These 2 lines of code are mainly for windows computers
+		if (Microphone.devices.Length > 0) {
+			Microphone.GetDeviceCaps (Microphone.devices [0], out minFrequency, out maxFrequency);//Gets the maxFrequency and minFrequency of the device
+			if (maxFrequency == 0) {//These 2 lines of code are mainly for windows computers
 				maxFrequency = 44100;
 			}
+			if (aSource.clip == null){
 
-			aSource.clip = Microphone.Start(Microphone.devices[0], true, 1, maxFrequency);//AudioSettings.outputSampleRate);
-			aSource.loop = true;
+				aSource.clip = Microphone.Start (Microphone.devices [0], true, 1, maxFrequency);//AudioSettings.outputSampleRate);
+			
+				aSource.loop = true;
 
-			//Wait until microphone starts
-			while (!(Microphone.GetPosition(Microphone.devices[0]) > 0)){
+				//Wait until microphone starts
+				while (!(Microphone.GetPosition(Microphone.devices[0]) > 0)) {
 
+				}
 			}
-
 			aSource.Play();
 
 			isMicrophoneReady = true;
@@ -135,7 +136,7 @@ public class MicrophoneController : MonoBehaviour {
 		// Convert index to frequency
 		pitchValue = HighPassFilter(freqN * 24000 / samples, highPassCutoff);
 		updatePastPitches (pitchValue);
-		//if (pitchValue > 100)	Debug.Log (pitchValue);
+		if (pitchValue > 100)	Debug.Log ("Pitch: " + pitchValue);
 	}
 
 	void calculateFFTCentroid(){
@@ -145,13 +146,15 @@ public class MicrophoneController : MonoBehaviour {
 		float fftSum = 0.0f;
 		float weightedSum = 0.0f;
 
-		for (int i = 0; i < fftSpectrum.Length; i++) {
+		for (int i = 0; i < fftSpectrum.Length/2; i++) {
 			fftSum += fftSpectrum [i];
-			weightedSum += fftSpectrum [i] * maxFrequency / fftSpectrum.Length;
+			weightedSum += fftSpectrum [i] * i * 24000/samples;
 		}
 
-		pitchValue = weightedSum / fftSum;
-		//Debug.Log ("Centroid: " + pitchValue);
+		pitchValue =/*(24000 / samples) * */(weightedSum / fftSum);
+		updatePastPitches (pitchValue);
+
+		Debug.Log ("Centroid: " + pitchValue);
 	}
 
 
@@ -204,6 +207,6 @@ public class MicrophoneController : MonoBehaviour {
 	}
 
 	void SaveRecordedAudio(){
-		EditorUtility.ExtractOggFile (GameObject.Find("TestAudioSource").GetComponent<AudioSource>().clip, Application.streamingAssetsPath);
+		//EditorUtility.ExtractOggFile (GameObject.Find("TestAudioSource").GetComponent<AudioSource>().clip, Application.streamingAssetsPath);
 	}
 }

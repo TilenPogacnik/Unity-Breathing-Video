@@ -3,6 +3,7 @@ using HutongGames.PlayMaker;
 using UnityEngine;
 using System.Collections;
 using Tooltip = HutongGames.PlayMaker.TooltipAttribute;
+using UnityEngine.UI;
 
 namespace BreathingLabs.BreathingVideo //TODO: change namespace?
 {
@@ -263,4 +264,31 @@ namespace BreathingLabs.BreathingVideo //TODO: change namespace?
 		}
 		
 	}
+
+	[ActionCategory("_Video")]
+	public class WaitForHeadsetConnection : FsmStateAction
+	{
+
+		public HeadsetDetection headsetDetection;
+		
+		//Resets the variables to default state
+		public override void Reset()
+		{
+			headsetDetection = null;
+		}
+		
+		public override void OnEnter()
+		{
+			StartCoroutine(WaitForHeadset ());	
+		}
+
+		IEnumerator WaitForHeadset(){
+			while (!headsetDetection.IsHeadsetConnected) {
+				yield return new WaitForEndOfFrame();
+			}
+
+			Finish ();
+		}
+	}
+
 }
