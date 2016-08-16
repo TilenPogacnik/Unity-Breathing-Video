@@ -4,10 +4,11 @@ using UnityEngine.UI;
 using System.Text;
 using System.Security.Cryptography;
 
+
 public class UserInputHandler : MonoBehaviour {
 
-	private string secretKey = "mySecretKey"; 
-	private static string url = "https://www.breathinglabs.com/MobileValidation.php";// "http://localhost/xampp/BLabs_connect_sql.php"; 
+	private string secretKey = "&m$)gwsf69Lr-jMgRk*ezs=$0fq22sj*-8_d#f54tc3#!0jkb%xHS3RSE7HvF4j238KTzsL2pD"; 
+	private static string url = "https://www.breathinglabs.com/MobileValidation.php";
 	private static string emai;
 	public string appName;
 
@@ -30,22 +31,33 @@ public class UserInputHandler : MonoBehaviour {
 
 	}
 
+	public void openOurWebsite(){
+		Application.OpenURL ("http://www.breathing-games.com");
+	}
+
 	public void onButtonClickEvent(){
 
-		loadingImage.SetActive (true);
 		// imamo stevilko uporabnika -> poglej stevilo mest?
-		string enteredNumber = validateInput ( inputText.text );
-		if (enteredNumber.Length > 3) {
-			connectToDB (enteredNumber);
+
+		if (inputText.text.Equals ("")) {
+			
+			errorText.text = "Enter registration number.";
+
 		} else {
-			loadingImage.SetActive (false);
+			loadingImage.SetActive (true);
+			errorText.text = "";
+
+			string enteredNumber = validateInput (inputText.text);
+			if (enteredNumber.Length > 3) {
+				connectToDB (enteredNumber);
+			} else {
+				loadingImage.SetActive (false);
+			}
 		}
 	}
 
 	private string validateInput( string input ){
-		/*
-		try{ // not needed - input type is int..
-		*/
+
 		long enteredNumber = long.Parse(inputText.text);
 		// check input length
 		if ( lengthValidator( inputText.text ) ){
@@ -53,15 +65,10 @@ public class UserInputHandler : MonoBehaviour {
 		}else{
 			return "1";
 		}
-		/*
-		}catch( System.FormatException e ){
-			return "Invalid number!";
-		}*/
 
 	}
 	private bool lengthValidator( string enteredNum ){
-		//Debug.Log ("len = " + enteredNum.Length);
-		//Debug.Log (enteredNum);
+		
 		if (enteredNum.Length < TOO_SHORT ) {
 			errorText.text = "Number too small";
 			return false; 
@@ -116,8 +123,7 @@ public class UserInputHandler : MonoBehaviour {
 
 				PlayerPrefs.SetInt ("highsc",1);
 				PlayerPrefs.Save ();
-				//SceneManager.LoadScene ("Mp3Scene");
-				//SceneManager.UnloadScene("ValidationScene");
+
 				Time.timeScale = 1.0f;
 				lockUI.SetActive(false);
 			}
