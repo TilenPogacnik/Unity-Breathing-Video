@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="windows-1250"?>
+<BreathingData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <BreathingEvents>
+    <Event type="Exhale">
+      <Time>1.066</Time>
+    </Event>
+    <Event type="Inhale">
+      <Time>1.749</Time>
+    </Event>
+    <Event type="Exhale">
+      <Time>2.709</Time>
+    </Event>
+    <Event type="Inhale">
+      <Time>3.477</Time>
+    </Event>
+    <Event type="Exhale">
+      <Time>4.117</Time>
+    </Event>
+    <Event type="Inhale">
+      <Time>4.714</Time>
+    </Event>
+  </BreathingEvents>
+</BreathingData>
