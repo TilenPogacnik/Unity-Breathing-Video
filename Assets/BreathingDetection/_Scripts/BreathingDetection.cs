@@ -36,6 +36,8 @@ public class BreathingDetection : MonoBehaviour {
 	[HideInInspector]
 	public float minimizedLoudness = 999f;
 
+	[SerializeField] private bool useMinimizedLoudness = true;
+
 
 	void Start () {
 		micControl = this.GetComponent<MicrophoneController> ();
@@ -44,11 +46,11 @@ public class BreathingDetection : MonoBehaviour {
 		}
 	}
 	
-	void Update () {
+	void FixedUpdate () {
 		updateVariance ();
 
 		minimizeLoudness ();
-
+		Debug.Log (minimizedLoudness);
 		switch (currentState) {
 			
 			case (Breathing.Inhale):
@@ -117,7 +119,7 @@ public class BreathingDetection : MonoBehaviour {
 	void updateVariance(){
 		variance = micControl.loudness - prevLoudness;
 		prevLoudness = micControl.loudness;
-
+		
 		//update variance counter
 		if (variance < exhaleVarianceThreshold) {
 			varianceUnderThresholdCounter++;
@@ -125,29 +127,37 @@ public class BreathingDetection : MonoBehaviour {
 		} else {
 			varianceUnderThresholdCounter = 0;
 		}
+
 	}
 
 	void minimizeLoudness(){
-		loudnessList.Add (prevLoudness);
 
-		if (prevLoudness <= minimizedLoudness) {
-			minimizedLoudness = prevLoudness;
-		}
+		if (useMinimizedLoudness) {
+			loudnessList.Add (prevLoudness);
 
-		//Remove oldest loudness from list and recalculate minimizedLoudness (only if the oldest loudness is the currentMinimizedLoudness)
-		if (loudnessList.Count >= maxLoudnessListCount) {
-			if (loudnessList[0] <= minimizedLoudness){
-				//Find new minimizedLoudness
-				float min = loudnessList[1];
-				for(int i = 1; i < loudnessList.Count; i++){
-					if (loudnessList[i] < min){
-						min =loudnessList[i];
-					}
-				}
-				minimizedLoudness = min;
-
+			if (prevLoudness <= minimizedLoudness) {
+				minimizedLoudness = prevLoudness;
 			}
-			loudnessList.RemoveAt(0);
+
+			//Remove oldest loudness from list and recalculate minimizedLoudness (only if the oldest loudness is the currentMinimizedLoudness)
+			if (loudnessList.Count >= maxLoudnessListCount) {
+				if (loudnessList [0] <= minimizedLoudness) {
+					//Find new minimizedLoudness
+					float min = loudnessList [1];
+					for (int i = 1; i < loudnessList.Count; i++) {
+						if (loudnessList [i] < min) {
+							min = loudnessList [i];
+						}
+					}
+					minimizedLoudness = min;
+
+				}
+				loudnessList.RemoveAt (0);
+
+			} 
+		}else {
+				minimizedLoudness = micControl.loudness;
+				Debug.Log(minimizedLoudness);
 
 		} 
 

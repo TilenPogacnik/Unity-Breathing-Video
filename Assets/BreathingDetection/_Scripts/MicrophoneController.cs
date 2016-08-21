@@ -15,7 +15,7 @@ public class MicrophoneController : MonoBehaviour {
 	public bool mute = true;
 	[HideInInspector]
 	public float loudness;
-	private float loudnessMultiplier = 10.0f; //Multiply loudness with this number
+	[SerializeField] private float loudnessMultiplier = 10.0f; //Multiply loudness with this number
 
 	private float[] fftSpectrum;
 
@@ -67,7 +67,7 @@ public class MicrophoneController : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 		if (isMicrophoneReady) {
 			loudness = calculateLoudness();
 
@@ -89,25 +89,21 @@ public class MicrophoneController : MonoBehaviour {
 	}
 
 	void prepareMicrophone(){
-		//Debug.Log ("Output sample rate: " + AudioSettings.outputSampleRate);
 		if (Microphone.devices.Length > 0) {
-			Microphone.GetDeviceCaps (Microphone.devices [0], out minFrequency, out maxFrequency);//Gets the maxFrequency and minFrequency of the device
+			//Gets the maxFrequency and minFrequency of the device
+			Microphone.GetDeviceCaps (Microphone.devices [0], out minFrequency, out maxFrequency);
 			if (maxFrequency == 0) {//These 2 lines of code are mainly for windows computers
 				maxFrequency = 44100;
 			}
 			if (aSource.clip == null){
-
-				aSource.clip = Microphone.Start (Microphone.devices [0], true, 1, maxFrequency);//AudioSettings.outputSampleRate);
-			
+				aSource.clip = Microphone.Start (Microphone.devices [0], true, 1, maxFrequency);			
 				aSource.loop = true;
 
-				//Wait until microphone starts
+				//Wait until microphone starts recording
 				while (!(Microphone.GetPosition(Microphone.devices[0]) > 0)) {
-
 				}
 			}
 			aSource.Play();
-
 			isMicrophoneReady = true;
 
 		} else {
@@ -136,7 +132,7 @@ public class MicrophoneController : MonoBehaviour {
 		// Convert index to frequency
 		pitchValue = HighPassFilter(freqN * 24000 / samples, highPassCutoff);
 		updatePastPitches (pitchValue);
-		if (pitchValue > 100)	Debug.Log ("Pitch: " + pitchValue);
+		//if (pitchValue > 100)	Debug.Log ("Pitch: " + pitchValue);
 	}
 
 	void calculateFFTCentroid(){

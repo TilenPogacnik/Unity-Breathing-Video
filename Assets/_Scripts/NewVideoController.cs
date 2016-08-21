@@ -266,7 +266,7 @@ public class NewVideoController : MonoBehaviour {
 
 	public bool SeekCurrentVideo(float seconds){
 		if (currentPlayingVideo == null) {
-			Debug.LogError ("Can not stop video - there is no video that is currently playing.");
+			Debug.LogError ("Can not seek video - there is no video that is currently playing or that is currently paused.");
 			return false;
 		}
 		int milliseconds = Mathf.FloorToInt (seconds * 1000);
@@ -296,7 +296,7 @@ public class NewVideoController : MonoBehaviour {
 			return false;
 		}
 		if (!video.isLoaded) {
-			Debug.LogError ("You can't add OnEnd delegates to video " + video.videoName + " before it is loaded."); 
+			Debug.LogError ("You can't remove OnEnd delegates from video " + video.videoName + " before it is loaded."); 
 			return false;
 		}
 
