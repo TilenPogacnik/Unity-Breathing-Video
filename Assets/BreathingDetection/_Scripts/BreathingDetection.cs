@@ -50,7 +50,7 @@ public class BreathingDetection : MonoBehaviour {
 		updateVariance ();
 
 		minimizeLoudness ();
-		Debug.Log (minimizedLoudness);
+//		Debug.Log (minimizedLoudness);
 		switch (currentState) {
 			
 			case (Breathing.Inhale):
@@ -157,7 +157,7 @@ public class BreathingDetection : MonoBehaviour {
 			} 
 		}else {
 				minimizedLoudness = micControl.loudness;
-				Debug.Log(minimizedLoudness);
+				//Debug.Log(minimizedLoudness);
 
 		} 
 

@@ -33,6 +33,8 @@ public class MicrophoneController : MonoBehaviour {
 
 	[SerializeField] private bool EnableSavingOfRecordedAudio;
 
+	private float maxPitch = 0.0f; //Delete this, its just for testing
+
 
 	IEnumerator Start () {
 		aSource = this.GetComponent<AudioSource> ();
@@ -132,7 +134,15 @@ public class MicrophoneController : MonoBehaviour {
 		// Convert index to frequency
 		pitchValue = HighPassFilter(freqN * 24000 / samples, highPassCutoff);
 		updatePastPitches (pitchValue);
-		//if (pitchValue > 100)	Debug.Log ("Pitch: " + pitchValue);
+
+		if (pitchValue > maxPitch){
+			maxPitch = pitchValue;
+			Debug.Log ("MaxPitch: " + maxPitch);
+
+		}
+		if (pitchValue > 750 && pitchValue < 3000) {
+			Debug.Log ("Pitch could be exhale");
+		}
 	}
 
 	void calculateFFTCentroid(){
