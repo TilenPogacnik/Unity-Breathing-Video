@@ -10,10 +10,23 @@ using System.IO;
 using System;
 
 
+
+
 public class handlingDataXml : MonoBehaviour {
 
 	private UserDataContainer myContainer;
 	private string PATH_SAVE_DATA;
+
+	void Start(){
+		initXml ();
+
+		if (PlayerPrefs.HasKey ("lastUsername")) {
+
+		} else {
+
+		}
+
+	}
 
 	public void initXml(){
 		// set path
@@ -161,10 +174,12 @@ public class handlingDataXml : MonoBehaviour {
 					// date for saving :)
 					tmp_obj_data.date = tmp_date_to_save;
 					usersData.Add (tmp_obj_data);
+
 					// next date
 					tmp_this_date = data.TimeStamp;
 					tmp_curr_sum = data.BreathLength;
 					tmp_num_of_data = 1;
+					tmp_curr_max = data.BreathLength;
 					// this date
 					tmp_date_to_save = data.TimeStamp;
 				}
