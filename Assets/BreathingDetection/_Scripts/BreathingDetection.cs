@@ -19,11 +19,15 @@ public class BreathingDetection : MonoBehaviour {
 
 	[Header("Hysteresis variables")]
 	public float exhaleLoudnessThresholdHigh = 0.5f; //determines how loud the exhale needs to be to change state to Exhale
+	[HideInInspector]
 	public float exhaleLoudnessThresholdLow = 0.2f;  ///determines how loud the exhale needs to be to change state to Exhale
 	public float inhaleLoudnessThresholdHigh = 0.1f; //determines how silent should the exhale be to change state to Inhale
+	[HideInInspector]
 	public float inhaleLoudnessThresholdLow = 0.05f; //determines how silent should the exhale be to change state to Inhale
 	
+	[HideInInspector]
 	public float exhaleVarianceThreshold = 2; //determines how large should the variance be to change state to Exhale
+	[HideInInspector]
 	public float inhaleVarianceThreshold = -3; //determines how silent should the variance be to change state to Inhale
 
 	public float pitchFrequencyThresholdLow = 1000;	//if sound pitch is between these values it could be an exhale

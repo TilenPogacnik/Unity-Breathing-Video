@@ -135,6 +135,8 @@ public class TestingResultsCalculator : MonoBehaviour {
 
 		foreach (BreathingEvent algorithmBreathingEvent in algorithmResultsList){
 			if (algorithmBreathingEvent.Type == "Exhale"){
+				Debug.Log (algorithmBreathingEvent.Time);
+
 				FPExhale ++;
 			} else {
 				FPInhale ++;

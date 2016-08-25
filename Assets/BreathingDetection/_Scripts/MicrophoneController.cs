@@ -25,13 +25,14 @@ public class MicrophoneController : MonoBehaviour {
 	public float highPassCutoff; //Ignores all frequencies above this value
 	private float pitchValue;
 	private List<float> pastPitches;
+	[HideInInspector]
 	public int pitchRecordTime = 5;
 	private float averagePitch;
 
-	[SerializeField] private bool UseFFTCentroid;
+	private bool UseFFTCentroid;
 	private float centroidValue;
 
-	[SerializeField] private bool EnableSavingOfRecordedAudio;
+	private bool EnableSavingOfRecordedAudio;
 
 	private float maxPitch = 0.0f; //Delete this, its just for testing
 
@@ -137,12 +138,12 @@ public class MicrophoneController : MonoBehaviour {
 
 		if (pitchValue > maxPitch){
 			maxPitch = pitchValue;
-			Debug.Log ("MaxPitch: " + maxPitch);
+			//Debug.Log ("MaxPitch: " + maxPitch);
 
 		}
-		if (pitchValue > 750 && pitchValue < 3000) {
+	/*	if (pitchValue > 750 && pitchValue < 3000) {
 			Debug.Log ("Pitch could be exhale");
-		}
+		}*/
 	}
 
 	void calculateFFTCentroid(){
