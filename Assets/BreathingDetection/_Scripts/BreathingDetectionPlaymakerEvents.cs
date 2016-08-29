@@ -11,11 +11,15 @@ public class BreathingDetectionPlaymakerEvents : MonoBehaviour {
 	void OnEnable(){
 		BreathingEvents.onInhale += HandleOnInhale;
 		BreathingEvents.onExhale += HandleOnExhale;
+		VideoEvents.onVideoEnded += HandleVideoEnded;
 	}
+
 
 	void OnDisable(){
 		BreathingEvents.onInhale -= HandleOnInhale;
 		BreathingEvents.onExhale -= HandleOnExhale;
+		VideoEvents.onVideoEnded -= HandleVideoEnded;
+
 	}
 
 	void Start () {
@@ -47,6 +51,20 @@ public class BreathingDetectionPlaymakerEvents : MonoBehaviour {
 				playmakerFSM.Fsm.Event("OnInhale");
 			}
 
+		} else {
+			Debug.LogWarning("There is no PlayMakerFSM to send the event to.");
+		}
+	}
+
+	void HandleVideoEnded ()
+	{
+		if (playmakerFSMs != null && playmakerFSMs.Count > 0) {
+			
+			//Sends an OnVideoEnd event to all PlaymakerFSM scripts on this object
+			foreach (PlayMakerFSM playmakerFSM in playmakerFSMs) {
+				playmakerFSM.Fsm.Event("OnVideoEnd");
+			}
+			
 		} else {
 			Debug.LogWarning("There is no PlayMakerFSM to send the event to.");
 		}

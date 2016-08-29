@@ -170,6 +170,7 @@ public class NewVideoController : MonoBehaviour {
 			VideoList.Add(video);
 
 			mediaPlayerControl.OnVideoFirstFrameReady += video.OnVideoLoaded;
+			mediaPlayerControl.OnEnd += HandleVideoEnd;
 		}
 
 		//Checks if all videos are different
@@ -309,6 +310,10 @@ public class NewVideoController : MonoBehaviour {
 
 		Debug.LogError ("Cannot remove a delegate that doesn't exist.");
 		return false;
+	}
+
+	void HandleVideoEnd(){
+		VideoEvents.TriggerOnVideoEnded ();
 	}
 
 }
