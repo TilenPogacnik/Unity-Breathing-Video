@@ -8,12 +8,21 @@ public class BreathingMonitoring : MonoBehaviour {
 	[SerializeField] private float MinimumAcceptableExhaleDuration;
 
 	[SerializeField]private string CurrentExhaleSuffix;
+	[SerializeField]private string CurrentExhalePrefix;
 	[SerializeField] private string AverageTextPrefix;
 	[SerializeField] private string MaximumTextPrefix;
+	[SerializeField] private string LevelTextPrefix;
+	[SerializeField] private string UsernameTextPrefix;
+
 
 	[SerializeField] private Text AverageText;
 	[SerializeField] private Text MaximumText;
 	[SerializeField] private Text CurrentExhaleText;
+	[SerializeField] private Text LevelText;
+	[SerializeField] private Text UsernameText;
+
+	public OpenGraphsUI openGraphsUI;
+
 
 	public float exhaleTimer { get; private set;}
 	private bool isPlayerExhaling = false;
@@ -49,11 +58,19 @@ public class BreathingMonitoring : MonoBehaviour {
 
 	void UpdateCurrentExhaleText (){
 			exhaleTimer += Time.deltaTime;
-			CurrentExhaleText.text = exhaleTimer.ToString ("f1")/*.Replace (".", ":")*/ + CurrentExhaleSuffix;
+			CurrentExhaleText.text = CurrentExhalePrefix + exhaleTimer.ToString ("f1")/*.Replace (".", ":")*/ + CurrentExhaleSuffix;
 	}
 
 	void UpdateMaximumBreathDuration(){
 		MaximumText.text = MaximumTextPrefix + MaximumBreathDuration.ToString ("f1") + CurrentExhaleSuffix; /*("00.00").Replace (".", ":");*/
+	}
+
+	void UpdateLevelText(){
+		LevelText.text = LevelTextPrefix + (Mathf.Floor (MaximumBreathDuration / 10) + 1).ToString ();
+	}
+
+	void UpdateUsernameText(){
+		UsernameText.text = UsernameTextPrefix + openGraphsUI.currentUsername;
 	}
 
 	void UpdateAverageBreathDuration(){
@@ -80,6 +97,7 @@ public class BreathingMonitoring : MonoBehaviour {
 		if (exhaleTimer > MaximumBreathDuration) {
 				MaximumBreathDuration = exhaleTimer;
 				UpdateMaximumBreathDuration();
+				UpdateLevelText();
 		}
 
 		if (exhaleTimer > MinimumAcceptableExhaleDuration) {
