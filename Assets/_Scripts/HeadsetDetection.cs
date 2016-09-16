@@ -14,20 +14,20 @@ public class HeadsetDetection : MonoBehaviour {
 		androidPlugin = GetComponent<AndroidPluginInit> ();
 		headsetPanel.SetActive (false);
 
-		/*#if UNITY_ANDROID && !UNITY_EDITOR
-		if (androidPlugin.getHeadsetState () < 1) {
-			IsHeadsetConnected = false;
-			headsetPanel.SetActive(true);
-			StartCoroutine (WaitForHeadset ());
-		} else {
+		#if UNITY_ANDROID && !UNITY_EDITOR
+			if (androidPlugin.getHeadsetState () < 1) {
+				IsHeadsetConnected = false;
+				headsetPanel.SetActive(true);
+				StartCoroutine (WaitForHeadset ());
+			} else {
+				IsHeadsetConnected = true;
+				headsetPanel.SetActive(false);
+			}	
+		
+		#else
 			IsHeadsetConnected = true;
 			headsetPanel.SetActive(false);
-		}	
-		
-		#else*/
-		IsHeadsetConnected = true;
-		headsetPanel.SetActive(false);
-		//#endif
+		#endif
 	}
 	
 	IEnumerator WaitForHeadset(){

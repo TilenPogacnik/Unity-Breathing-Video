@@ -87,7 +87,7 @@ public class BreathingDetection : MonoBehaviour {
 	void checkIfExhaling(){
 		
 		if (currentState == Breathing.Inhale) {
-			if (minimizedLoudness > exhaleLoudnessThresholdLow
+			if (minimizedLoudness > exhaleLoudnessThresholdHigh
 			    &&(micControl.getPitch() > pitchFrequencyThresholdLow && micControl.getPitch() < pitchFrequencyThresholdHigh)) {
 				currentState = Breathing.Exhale; //Change state to exhaling
 				BreathingEvents.TriggerOnExhale (); //Trigger onExhale event
@@ -112,7 +112,7 @@ public class BreathingDetection : MonoBehaviour {
 		//Moč pod  exhale thresholdom && varianca < inhale threshold
 		//ALI loudness občutno pod thresholdom
 		if (currentState == Breathing.Exhale &&
-		    ((minimizedLoudness < inhaleLoudnessThresholdHigh && variance < inhaleVarianceThreshold) || minimizedLoudness < inhaleLoudnessThresholdLow)) {
+		    ((minimizedLoudness < inhaleLoudnessThresholdHigh))) {
 			
 			currentState = Breathing.Inhale; //Change state to inhaling			
 			BreathingEvents.TriggerOnInhale(); //Trigger onInhale event			

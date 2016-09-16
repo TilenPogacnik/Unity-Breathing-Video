@@ -5,13 +5,13 @@ using UnityEngine.UI;
 public class AndroidPluginInit : MonoBehaviour {
 	
 	//public Text mojText;
-	
+	#if UNITY_ANDROID
+
 	AndroidJavaClass ajc;
 	protected string pck_name = "com.developer.luka.mrak.headsetdetection.HeadsetDetector";
-	
 	private AndroidJavaObject testobj = null;
 	private AndroidJavaObject playerActivityContext = null;
-	
+#endif
 	//private int count = 0;
 
 	private GameObject headsetPopUp;
@@ -46,7 +46,8 @@ public class AndroidPluginInit : MonoBehaviour {
 	}
 
 	public int getHeadsetState(){
-			
+		#if UNITY_ANDROID
+
 		int sta = testobj.Call<int> ("getHeadsetState");
 		/*if( sta == 0 ){
 			// no headset
@@ -55,6 +56,9 @@ public class AndroidPluginInit : MonoBehaviour {
 			headsetPopUp.SetActive (false);
 		}*/
 		return sta;
+#else
+		return 1;
+#endif
 	}
 	/*
 	string msg = "";

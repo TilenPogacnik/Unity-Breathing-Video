@@ -52,6 +52,7 @@ public class BreathingMonitoring : MonoBehaviour {
 	void FixedUpdate () {
 		if (isPlayerExhaling) {
 			UpdateCurrentExhaleText ();
+			UpdateLevelText();
 		}
 
 	}
@@ -66,7 +67,7 @@ public class BreathingMonitoring : MonoBehaviour {
 	}
 
 	void UpdateLevelText(){
-		LevelText.text = LevelTextPrefix + (Mathf.Floor (MaximumBreathDuration / 10) + 1).ToString ();
+		LevelText.text = LevelTextPrefix + (Mathf.Floor (exhaleTimer / 10) + 1).ToString ();
 	}
 
 	void UpdateUsernameText(){
@@ -97,7 +98,6 @@ public class BreathingMonitoring : MonoBehaviour {
 		if (exhaleTimer > MaximumBreathDuration) {
 				MaximumBreathDuration = exhaleTimer;
 				UpdateMaximumBreathDuration();
-				UpdateLevelText();
 		}
 
 		if (exhaleTimer > MinimumAcceptableExhaleDuration) {
